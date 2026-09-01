@@ -1,0 +1,54 @@
+{
+  "name": "opencode-elm-models",
+  "version": "0.1.0",
+  "description": "OpenCode V1 provider plugin for University of Edinburgh ELM-hosted models.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "prepack": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edina/opencode-elm-models.git"
+  },
+  "bugs": {
+    "url": "https://github.com/edina/opencode-elm-models/issues"
+  },
+  "homepage": "https://github.com/edina/opencode-elm-models#readme",
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "elm",
+    "qwen",
+    "university-of-edinburgh"
+  ],
+  "author": "EDINA, University of Edinburgh",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.18.16"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0"
+  }
+}

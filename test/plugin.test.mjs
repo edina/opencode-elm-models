@@ -1,0 +1,71 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+
+import {
+  ElmModelsPlugin,
+} from '../dist/index.js';
+import {
+  ELM_API_BASE_URL,
+  ELM_PROVIDER_ID,
+  ELM_QWEN_MODEL_ID,
+  applyElmProvider,
+} from '../dist/provider.js';
+
+test('exports an OpenCode V1 plugin with ELM API-key authentication', async () => {
+  const hooks = await ElmModelsPlugin({});
+  assert.equal(hooks.auth.provider, ELM_PROVIDER_ID);
+  assert.deepEqual(hooks.auth.methods, [{ type: 'api', label: 'ELM API key' }]);
+  assert.equal(typeof hooks.config, 'function');
+});
+
+test('adds the production ELM Qwen provider', () => {
+  const config = {};
+  applyElmProvider(config);
+
+  const provider = config.provider[ELM_PROVIDER_ID];
+  assert.equal(provider.npm, '@ai-sdk/openai-compatible');
+  assert.equal(provider.name, 'University of Edinburgh ELM');
+  assert.deepEqual(provider.env, ['ELM_API_KEY']);
+  assert.equal(provider.options.baseURL, ELM_API_BASE_URL);
+
+  const model = provider.models[ELM_QWEN_MODEL_ID];
+  assert.equal(model.name, 'Qwen 3.5 397B');
+  assert.equal(model.reasoning, true);
+  assert.deepEqual(model.interleaved, { field: 'reasoning' });
+  assert.deepEqual(model.modalities.input, ['text', 'image']);
+  assert.deepEqual(model.limit, { context: 262144, output: 81920 });
+});
+
+test('preserves other providers and lets user configuration override defaults', () => {
+  const config = {
+    provider: {
+      other: {
+        name: 'Other provider',
+        models: {},
+      },
+      elm: {
+        options: {
+          baseURL: 'http://localhost:8080/v1',
+          customOption: true,
+        },
+        models: {
+          [ELM_QWEN_MODEL_ID]: {
+            name: 'Local display name',
+          },
+          'future/model': {
+            name: 'Future model',
+          },
+        },
+      },
+    },
+  };
+
+  applyElmProvider(config);
+
+  assert.equal(config.provider.other.name, 'Other provider');
+  assert.equal(config.provider.elm.options.baseURL, 'http://localhost:8080/v1');
+  assert.equal(config.provider.elm.options.customOption, true);
+  assert.equal(config.provider.elm.models[ELM_QWEN_MODEL_ID].name, 'Local display name');
+  assert.equal(config.provider.elm.models[ELM_QWEN_MODEL_ID].reasoning, true);
+  assert.equal(config.provider.elm.models['future/model'].name, 'Future model');
+});

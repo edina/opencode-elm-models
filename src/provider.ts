@@ -54,6 +54,10 @@ function mergeDefaults<T>(defaults: T, override: T | undefined): T {
 
 export function applyElmProvider(config: Config): void {
   config.provider ??= {};
+  config.provider.openai = mergeDefaults(
+    { options: { baseURL: ELM_API_BASE_URL } } as ProviderConfig,
+    config.provider.openai,
+  );
   config.provider[ELM_PROVIDER_ID] = mergeDefaults(
     ELM_PROVIDER,
     config.provider[ELM_PROVIDER_ID],

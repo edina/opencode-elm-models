@@ -22,6 +22,8 @@ test('adds the production ELM Qwen provider', () => {
   const config = {};
   applyElmProvider(config);
 
+  assert.equal(config.provider.openai.options.baseURL, ELM_API_BASE_URL);
+
   const provider = config.provider[ELM_PROVIDER_ID];
   assert.equal(provider.npm, '@ai-sdk/openai-compatible');
   assert.equal(provider.name, 'University of Edinburgh ELM');
@@ -43,6 +45,11 @@ test('preserves other providers and lets user configuration override defaults', 
         name: 'Other provider',
         models: {},
       },
+      openai: {
+        options: {
+          baseURL: 'http://localhost:8080/openai/v1',
+        },
+      },
       elm: {
         options: {
           baseURL: 'http://localhost:8080/v1',
@@ -63,6 +70,7 @@ test('preserves other providers and lets user configuration override defaults', 
   applyElmProvider(config);
 
   assert.equal(config.provider.other.name, 'Other provider');
+  assert.equal(config.provider.openai.options.baseURL, 'http://localhost:8080/openai/v1');
   assert.equal(config.provider.elm.options.baseURL, 'http://localhost:8080/v1');
   assert.equal(config.provider.elm.options.customOption, true);
   assert.equal(config.provider.elm.models[ELM_QWEN_MODEL_ID].name, 'Local display name');

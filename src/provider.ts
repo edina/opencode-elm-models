@@ -35,6 +35,14 @@ export const ELM_PROVIDER = {
     [ELM_MISTRAL_MODEL_ID]: {
       name: 'Mistral 4 Small 119B',
       reasoning: true,
+      variants: {
+        low: {
+          disabled: true,
+        },
+        medium: {
+          disabled: true,
+        },
+      },
       interleaved: {
         field: 'reasoning',
       },

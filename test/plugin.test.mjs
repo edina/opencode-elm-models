@@ -41,6 +41,10 @@ test('adds the production ELM Qwen provider', () => {
   const mistral = provider.models[ELM_MISTRAL_MODEL_ID];
   assert.equal(mistral.name, 'Mistral 4 Small 119B');
   assert.equal(mistral.reasoning, true);
+  assert.deepEqual(mistral.variants, {
+    low: { disabled: true },
+    medium: { disabled: true },
+  });
   assert.deepEqual(mistral.interleaved, { field: 'reasoning' });
   assert.deepEqual(mistral.modalities.input, ['text', 'image']);
   assert.deepEqual(mistral.limit, { context: 262144, output: 81920 });

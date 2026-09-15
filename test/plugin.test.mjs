@@ -8,6 +8,7 @@ import {
   ELM_API_BASE_URL,
   ELM_PROVIDER_ID,
   ELM_QWEN_MODEL_ID,
+  ELM_MISTRAL_MODEL_ID,
   applyElmProvider,
 } from '../dist/provider.js';
 
@@ -30,12 +31,19 @@ test('adds the production ELM Qwen provider', () => {
   assert.deepEqual(provider.env, ['ELM_API_KEY']);
   assert.equal(provider.options.baseURL, ELM_API_BASE_URL);
 
-  const model = provider.models[ELM_QWEN_MODEL_ID];
-  assert.equal(model.name, 'Qwen 3.5 397B');
-  assert.equal(model.reasoning, true);
-  assert.deepEqual(model.interleaved, { field: 'reasoning' });
-  assert.deepEqual(model.modalities.input, ['text', 'image']);
-  assert.deepEqual(model.limit, { context: 262144, output: 81920 });
+  const qwen = provider.models[ELM_QWEN_MODEL_ID];
+  assert.equal(qwen.name, 'Qwen 3.5 397B');
+  assert.equal(qwen.reasoning, true);
+  assert.deepEqual(qwen.interleaved, { field: 'reasoning' });
+  assert.deepEqual(qwen.modalities.input, ['text', 'image']);
+  assert.deepEqual(qwen.limit, { context: 262144, output: 81920 });
+
+  const mistral = provider.models[ELM_MISTRAL_MODEL_ID];
+  assert.equal(mistral.name, 'Mistral 4 Small 119B');
+  assert.equal(mistral.reasoning, true);
+  assert.deepEqual(mistral.interleaved, { field: 'reasoning' });
+  assert.deepEqual(mistral.modalities.input, ['text', 'image']);
+  assert.deepEqual(mistral.limit, { context: 262144, output: 81920 });
 });
 
 test('preserves other providers and lets user configuration override defaults', () => {

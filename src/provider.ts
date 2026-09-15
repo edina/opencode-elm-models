@@ -3,6 +3,7 @@ import type { Config } from '@opencode-ai/plugin';
 export const ELM_PROVIDER_ID = 'elm';
 export const ELM_API_BASE_URL = 'https://elm.edina.ac.uk/api/v1';
 export const ELM_QWEN_MODEL_ID = 'Qwen/Qwen3.5-397B-A17B-FP8';
+export const ELM_MISTRAL_MODEL_ID = 'mistralai/Mistral-Small-4-119B-2603';
 
 type ProviderConfig = NonNullable<Config['provider']>[string];
 
@@ -18,6 +19,21 @@ export const ELM_PROVIDER = {
   models: {
     [ELM_QWEN_MODEL_ID]: {
       name: 'Qwen 3.5 397B',
+      reasoning: true,
+      interleaved: {
+        field: 'reasoning',
+      },
+      modalities: {
+        input: ['text', 'image'],
+        output: ['text'],
+      },
+      limit: {
+        context: 262144,
+        output: 81920,
+      },
+    },
+    [ELM_MISTRAL_MODEL_ID]: {
+      name: 'Mistral 4 Small 119B',
       reasoning: true,
       interleaved: {
         field: 'reasoning',

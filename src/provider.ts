@@ -45,6 +45,10 @@ export function buildElmProvider(): ElmProvider {
       },
       enabled: true,
       status: 'active',
+      variants: [
+        { id: Model.VariantID.make('none'), settings: { disabled: true } },
+        { id: Model.VariantID.make('high'), settings: { disabled: true } },
+      ],
     },
     {
       ...Model.Info.default(providerId, Model.ID.make(ELM_MISTRAL_MODEL_ID)),
@@ -62,8 +66,8 @@ export function buildElmProvider(): ElmProvider {
         output: 81920,
       },
       variants: [
-        { id: Model.VariantID.make('low'), settings: { disabled: true } },
-        { id: Model.VariantID.make('medium'), settings: { disabled: true } },
+        { id: Model.VariantID.make('none'), settings: { disabled: true } },
+        { id: Model.VariantID.make('high'), settings: { disabled: true } },
       ],
       enabled: true,
       status: 'active',

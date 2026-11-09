@@ -1,7 +1,7 @@
 {
   "name": "opencode-elm-models",
-  "version": "0.3.1",
-  "description": "OpenCode V1 provider plugin for University of Edinburgh ELM-hosted models.",
+  "version": "1.0.0",
+  "description": "OpenCode V2 provider plugin for University of Edinburgh ELM-hosted models.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -19,8 +19,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
-    "test": "npm run build && node --test test/*.test.mjs",
-    "prepack": "npm test"
+    "prepare": "npm run build",
+    "prepack": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -45,10 +45,24 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "@opencode-ai/plugin": "^1.18.16"
+  "peerDependencies": {
+    "@opencode/plugin": "^2.0.4",
+    "effect": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@opencode/plugin": {
+      "optional": true
+    },
+    "effect": {
+      "optional": true
+    }
   },
   "devDependencies": {
+    "@opencode/plugin": "^2.0.4",
+    "effect": "^4.0.0",
     "typescript": "^5.9.0"
+  },
+  "dependencies": {
+    "opencode-elm-models": "git+https://git.ecdf.ed.ac.uk/s2703496/opencode-elm-models#main"
   }
 }

@@ -1,18 +1,21 @@
-import type { Plugin } from '@opencode-ai/plugin';
+import { Plugin } from '@opencode/plugin';
 
-import { applyElmProvider, ELM_PROVIDER_ID } from './provider.js';
+import { ELM_PROVIDER_ID, buildElmProvider } from './provider.js';
 
-export const ElmModelsPlugin: Plugin = async () => ({
-  config: async (config) => {
-    applyElmProvider(config);
-  },
-  auth: {
-    provider: ELM_PROVIDER_ID,
-    methods: [
-      {
-        type: 'api',
-        label: 'ELM API key',
-      },
-    ],
+export const ElmModelsPlugin = Plugin.define({
+  id: ELM_PROVIDER_ID,
+  async setup(ctx) {
+    // Add the ELM provider with its models
+    ctx.provider.transform((editor) => {
+      const provider = buildElmProvider();
+      if (!editor.get(provider.info.id)) {
+        editor.add({
+          info: provider.info,
+          models: provider.models,
+        });
+      }
+    });
   },
 });
+
+export default ElmModelsPlugin;

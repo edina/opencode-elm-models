@@ -1,10 +1,10 @@
 # OpenCode ELM models
 
-An OpenCode V1 plugin that adds the University of Edinburgh ELM model provider and its supported models. It currently includes the production Qwen 3.5 397B model with its 262,144-token context window.
+An OpenCode V2 plugin that adds the University of Edinburgh ELM model provider and its supported models. It currently includes the production Qwen 3.5 397B model with its 262,144-token context window.
 
 ## Requirements
 
-- OpenCode V1 with npm plugin support
+- OpenCode V2
 - An ELM API key
 
 ## Install
@@ -44,7 +44,7 @@ opencode providers login --provider elm --method "ELM API key"
 
 Paste your key when prompted. OpenCode stores the credential in its auth store; it is not written into `opencode.jsonc`.
 
-You can also run `opencode providers login` and select `elm (plugin)` and `ELM API key` interactively. `opencode auth login` remains available as an alias.
+You can also run `opencode providers login` and select `elm (plugin)` and `ELM API key` interactively.
 
 Alternatively, set the key in the environment that launches OpenCode:
 
@@ -77,7 +77,7 @@ The plugin supplies defaults without replacing user configuration. An `elm` prov
 
 ```sh
 npm install
-npm test
+npm run build
 ```
 
 To test an unpublished checkout, add its absolute directory to the `plugin` array in `opencode.jsonc`, then restart OpenCode.

@@ -1,29 +1,41 @@
-import type { Config } from '@opencode-ai/plugin';
+import { Model, Provider } from '@opencode/plugin';
+import type { Types } from 'effect';
 
 export const ELM_PROVIDER_ID = 'elm';
 export const ELM_API_BASE_URL = 'https://elm.edina.ac.uk/api/v1';
 export const ELM_QWEN_MODEL_ID = 'Qwen/Qwen3.5-397B-A17B-FP8';
 export const ELM_MISTRAL_MODEL_ID = 'mistralai/Mistral-Small-4-119B-2603';
 
-type ProviderConfig = NonNullable<Config['provider']>[string];
+// OpenAI-compatible package for V2
+const OPENAI_COMPATIBLE_PACKAGE = '@opencode/ai/providers/openai-compatible';
 
-// OpenCode V1's runtime config supports `interleaved`, but the published
-// Config type in @opencode-ai/plugin 1.x does not expose it yet.
-export const ELM_PROVIDER = {
-  npm: '@ai-sdk/openai-compatible',
-  name: 'University of Edinburgh ELM',
-  env: ['ELM_API_KEY'],
-  options: {
-    baseURL: ELM_API_BASE_URL,
-  },
-  models: {
-    [ELM_QWEN_MODEL_ID]: {
+interface ElmProvider {
+  info: Provider.Info;
+  models: readonly Types.DeepMutable<Model.Info>[];
+}
+
+export function buildElmProvider(): ElmProvider {
+  const providerId = Provider.ID.make(ELM_PROVIDER_ID);
+
+  const info: Provider.Info = {
+    ...Provider.Info.empty(providerId),
+    name: 'University of Edinburgh ELM',
+    activation: 'enabled',
+    package: OPENAI_COMPATIBLE_PACKAGE,
+    settings: {
+      baseURL: ELM_API_BASE_URL,
+    },
+  };
+
+  const models: Types.DeepMutable<Model.Info>[] = [
+    {
+      ...Model.Info.default(providerId, Model.ID.make(ELM_QWEN_MODEL_ID)),
       name: 'Qwen 3.5 397B',
-      reasoning: true,
-      interleaved: {
-        field: 'reasoning',
+      compatibility: {
+        reasoningField: 'reasoning',
       },
-      modalities: {
+      capabilities: {
+        tools: true,
         input: ['text', 'image'],
         output: ['text'],
       },
@@ -31,22 +43,17 @@ export const ELM_PROVIDER = {
         context: 262144,
         output: 81920,
       },
+      enabled: true,
+      status: 'active',
     },
-    [ELM_MISTRAL_MODEL_ID]: {
+    {
+      ...Model.Info.default(providerId, Model.ID.make(ELM_MISTRAL_MODEL_ID)),
       name: 'Mistral 4 Small 119B',
-      reasoning: true,
-      variants: {
-        low: {
-          disabled: true,
-        },
-        medium: {
-          disabled: true,
-        },
+      compatibility: {
+        reasoningField: 'reasoning',
       },
-      interleaved: {
-        field: 'reasoning',
-      },
-      modalities: {
+      capabilities: {
+        tools: true,
         input: ['text', 'image'],
         output: ['text'],
       },
@@ -54,36 +61,14 @@ export const ELM_PROVIDER = {
         context: 262144,
         output: 81920,
       },
+      variants: [
+        { id: Model.VariantID.make('low'), settings: { disabled: true } },
+        { id: Model.VariantID.make('medium'), settings: { disabled: true } },
+      ],
+      enabled: true,
+      status: 'active',
     },
-  },
-} as ProviderConfig;
+  ];
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function mergeDefaults<T>(defaults: T, override: T | undefined): T {
-  if (!isRecord(defaults) || !isRecord(override)) return override ?? defaults;
-
-  const result: Record<string, unknown> = { ...defaults };
-  for (const [key, value] of Object.entries(override)) {
-    const defaultValue = result[key];
-    result[key] =
-      isRecord(defaultValue) && isRecord(value)
-        ? mergeDefaults(defaultValue, value)
-        : value;
-  }
-  return result as T;
-}
-
-export function applyElmProvider(config: Config): void {
-  config.provider ??= {};
-  config.provider.openai = mergeDefaults(
-    { options: { baseURL: ELM_API_BASE_URL } } as ProviderConfig,
-    config.provider.openai,
-  );
-  config.provider[ELM_PROVIDER_ID] = mergeDefaults(
-    ELM_PROVIDER,
-    config.provider[ELM_PROVIDER_ID],
-  );
+  return { info, models };
 }

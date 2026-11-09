@@ -19,6 +19,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
+    "prepare": "npm run build",
     "prepack": "npm run build"
   },
   "repository": {
@@ -60,5 +61,8 @@
     "@opencode/plugin": "^2.0.4",
     "effect": "^4.0.0",
     "typescript": "^5.9.0"
+  },
+  "dependencies": {
+    "opencode-elm-models": "git+https://git.ecdf.ed.ac.uk/s2703496/opencode-elm-models#main"
   }
 }
